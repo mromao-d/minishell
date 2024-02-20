@@ -6,7 +6,8 @@ OBJS_PATH = ./objs/
 SRC = $(SRC_PATH)main.c
 OBJS = $(SRC:$(SRC_PATH)%.c=$(OBJS_PATH)%.o)
 
-CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
+# CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -g
 
 CC = cc
 
@@ -15,7 +16,7 @@ CC = cc
 		$(CC) -c $< -o $@
 
 $(NAME): $(OBJS)
-		@$(CC) $(OBJS) $(CFLAGS) -o $(NAME)  -lreadline
+		@$(CC) $(OBJS) $(CFLAGS) -o $(NAME) -lreadline
 
 $(OBJS_PATH)%.o: $(SRC_PATH)%.c | $(OBJS_PATH)
 		$(CC) $(CFLAGS) -c $< -o $@

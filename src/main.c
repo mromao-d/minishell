@@ -47,8 +47,7 @@ int	ft_execv(const char *path, char *const *argv)
 {
 	if (!(ft_strncmp(path, "./", 2) == 0))
 		return (12);
-	(void) argv;
-	execv(path, NULL);
+	execv(path, argv);
 	return (-1);
 }
 
@@ -58,11 +57,32 @@ int	ft_execv(const char *path, char *const *argv)
 char	*ft_get_env(const char *env)
 {
 	if (!(ft_strcmp(env, "PATH") == 0 || ft_strcmp(env, "HOME") == 0 || ft_strcmp(env, "TERM") == 0 || ft_strcmp(env, "USER") == 0))	
-		return ("No valid env");
+	{	
+		printf("No valid env\n");
+		return (NULL);
+	}
 	printf("%s\n", getenv(env));
 	return (getenv(env));
 }
 
+
+void	ft_clean_args(char **kargs, int argc)
+{
+	int	i;
+
+	i = -1;
+	while ( ++i < argc)
+		if (kargs[i])
+			free(kargs[i]);
+	return ;
+}
+
+void	ft_clean(char *kargs)
+{
+	if (kargs)
+		free(kargs);
+	return ;
+}
 
 
 int main(void) 
@@ -78,9 +98,13 @@ int main(void)
 			break;
 		}
 		ft_get_env(prompt);
-		ft_execv(prompt, NULL);
-		add_history(prompt);
 		free((void *) prompt);
+		// if (env)
+		// 	free((void *) env);
+		// ft_execv(prompt, NULL);
+		// add_history(prompt);
 	}
+	rl_clear_history();
+	// ft_clean(prompt);
 	return 0;
 }
