@@ -4,6 +4,8 @@
 #include <string.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 // readline	-> displays prompt with message that I want
 
@@ -42,12 +44,22 @@ int	ft_strncmp(const char *s1, const char *s2, size_t	i)
 }
 
 // execv executes the programe with the needed arguments
+// Need to fork the process-- otherwise it will end my process and close my prompt
+// 		The child process pid equals zero.
 // should return -1 (or zero ???)
 int	ft_execv(const char *path, char *const *argv)
 {
-	if (!(ft_strncmp(path, "./", 2) == 0))
-		return (12);
-	execv(path, argv);
+	int	pid;
+	int	status;
+
+	pid = fork();
+	if (pid == 0)
+	{	
+		execv(path, argv);
+		kill(getpid(), SIGKILL);
+	}
+	else
+		waitpid(pid, &status, 0);
 	return (-1);
 }
 
@@ -77,11 +89,18 @@ void	ft_clean_args(char **kargs, int argc)
 	return ;
 }
 
+// cleans argument, if it exists
 void	ft_clean(char *kargs)
 {
 	if (kargs)
 		free(kargs);
 	return ;
+}
+
+// exits programm
+void	ft_exit(void)
+{
+	exit(0);
 }
 
 
@@ -97,12 +116,19 @@ int main(void)
 			printf("\n");
 			break;
 		}
+		if (ft_strcmp(prompt, "exit") == 0)
+		{
+			// free((void *) prompt);
+			// rl_clear_history();
+			ft_exit();
+		}
 		ft_get_env(prompt);
-		free((void *) prompt);
+		add_history(prompt);
 		// if (env)
 		// 	free((void *) env);
-		// ft_execv(prompt, NULL);
-		// add_history(prompt);
+		if (ft_strncmp(prompt, "./", 2) == 0)
+			ft_execv(prompt, NULL);
+		free((void *) prompt);
 	}
 	rl_clear_history();
 	// ft_clean(prompt);

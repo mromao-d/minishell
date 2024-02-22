@@ -34,4 +34,7 @@ re: fclean all
 $(OBJS_PATH):
 		mkdir -p $(OBJS_PATH)
 
+valgrind_supp: all
+		valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=ignore_readline.supp ./$(NAME)
+
 .PHONY: all clean fclean re
