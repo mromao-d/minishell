@@ -79,6 +79,8 @@ int main(void)
 			ft_exit();
 		if (ft_strcmp(prompt, "pwd") == 0)
 			ft_pwd();
+		if (ft_strncmp(prompt, "cd", 2) == 0)
+			ft_cd(prompt);
 		if (ft_strncmp(prompt, "echo", 4) == 0)
 			ft_get_env(prompt);
 		if (ft_strncmp(prompt, "./", 2) == 0)
