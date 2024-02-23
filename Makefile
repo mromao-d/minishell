@@ -3,7 +3,7 @@ NAME = minishell
 SRC_PATH = ./src/
 OBJS_PATH = ./objs/
 
-SRC = $(SRC_PATH)main.c
+SRC = $(SRC_PATH)main.c $(SRC_PATH)echo.c $(SRC_PATH)utils.c $(SRC_PATH)split.c $(SRC_PATH)builtins.c
 OBJS = $(SRC:$(SRC_PATH)%.c=$(OBJS_PATH)%.o)
 
 # CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address

@@ -1,11 +1,4 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#include "../includes/minishel.h"
 
 // readline	-> displays prompt with message that I want
 
@@ -17,32 +10,6 @@
 // add_history	-> add history --> need this to add history of what was prompted
 
 
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	while (*s1 && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-	}
-	return (*s1 - *s2);
-}
-
-int	ft_strncmp(const char *s1, const char *s2, size_t	i)
-{
-	size_t	j;
-
-	if (i == 0)
-		return (0);
-	j = 0;
-	while (*s1 && *s1 == *s2 && j < i - 1)
-	{
-		s1++;
-		s2++;
-		j++;
-	}
-	return ((int)*s1 - (int)*s2);
-}
-
 // execv executes the programe with the needed arguments
 // Need to fork the process-- otherwise it will end my process and close my prompt
 // 		The child process pid equals zero.
@@ -53,28 +20,20 @@ int	ft_execv(const char *path, char *const *argv)
 	int	status;
 
 	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		return (-1);
+	}
 	if (pid == 0)
 	{	
 		execv(path, argv);
+		perror("execv");
 		kill(getpid(), SIGKILL);
 	}
 	else
 		waitpid(pid, &status, 0);
 	return (-1);
-}
-
-// returns the environment variable
-// to return the "PATH" environment, just have to getenv("PATH")
-// types of env variables: USER, TERM, HOME & PATH
-char	*ft_get_env(const char *env)
-{
-	if (!(ft_strcmp(env, "PATH") == 0 || ft_strcmp(env, "HOME") == 0 || ft_strcmp(env, "TERM") == 0 || ft_strcmp(env, "USER") == 0))	
-	{	
-		printf("No valid env\n");
-		return (NULL);
-	}
-	printf("%s\n", getenv(env));
-	return (getenv(env));
 }
 
 
@@ -117,17 +76,16 @@ int main(void)
 			break;
 		}
 		if (ft_strcmp(prompt, "exit") == 0)
-		{
-			// free((void *) prompt);
-			// rl_clear_history();
 			ft_exit();
-		}
-		ft_get_env(prompt);
-		add_history(prompt);
-		// if (env)
-		// 	free((void *) env);
+		if (ft_strcmp(prompt, "pwd") == 0)
+			ft_pwd();
+		if (ft_strncmp(prompt, "echo", 4) == 0)
+			ft_get_env(prompt);
 		if (ft_strncmp(prompt, "./", 2) == 0)
 			ft_execv(prompt, NULL);
+		if (strcmp(prompt, "clear") == 0)
+			printf("\033[2J\033[H");
+		add_history(prompt);
 		free((void *) prompt);
 	}
 	rl_clear_history();
