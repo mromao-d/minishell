@@ -12,9 +12,11 @@
 
 typedef struct s_echos {
 	char	**echos;
+	int		single_quotes;
+	int		double_quotes;
 }	t_echos;
 
-// echo.c
+// getenv.c
 char	*ft_get_env(const char *env);
 
 // utils.c
@@ -31,6 +33,8 @@ char	*ft_strdup(const char *s);
 char	**ft_split(char const *str, char c);
 
 // builtins
+void	ft_deal_built_ins(char *prompt);
+int		ft_echo(char *prompt);
 int		ft_pwd(void);
 int		ft_cd(char *path);
 

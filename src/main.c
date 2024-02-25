@@ -77,18 +77,14 @@ int main(void)
 		}
 		if (ft_strcmp(prompt, "exit") == 0)
 			ft_exit();
-		if (ft_strcmp(prompt, "pwd") == 0)
-			ft_pwd();
-		if (ft_strncmp(prompt, "cd", 2) == 0)
-			ft_cd(prompt);
-		if (ft_strncmp(prompt, "echo", 4) == 0)
-			ft_get_env(prompt);
+		ft_deal_built_ins(prompt);
 		if (ft_strncmp(prompt, "./", 2) == 0)
 			ft_execv(prompt, NULL);
 		if (strcmp(prompt, "clear") == 0)
 			printf("\033[2J\033[H");
 		add_history(prompt);
 		free((void *) prompt);
+		prompt = 0;
 	}
 	rl_clear_history();
 	// ft_clean(prompt);
