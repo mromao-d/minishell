@@ -9,12 +9,22 @@
 #include <readline/history.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <fcntl.h>
 
-typedef struct s_echos {
-	char	**echos;
-	int		single_quotes;
-	int		double_quotes;
-}	t_echos;
+typedef struct s_shell {
+	char			*echos;
+	struct s_env	*env;
+}	t_shell;
+
+typedef struct s_env {
+	char			*var_name;
+	int				*var_value;
+	struct s_env	*next;
+}	t_env;
+
+// main.c
+int		ft_validate_quotes(char *arg);
+int		ft_execv(const char *path, char *const *argv);
 
 // getenv.c
 char	*ft_get_env(const char *env);
@@ -28,6 +38,7 @@ char	*ft_strchr(const char *s, int c);
 int		ft_count_words_arr(char **arr);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strdup(const char *s);
+size_t	ft_strlcat(char *dst, const char *src, size_t size);
 
 // split
 char	**ft_split(char const *str, char c);
@@ -37,8 +48,15 @@ void	ft_deal_built_ins(char *prompt);
 int		ft_echo(char *prompt);
 int		ft_pwd(void);
 int		ft_cd(char *path);
+int		ft_env(char **envp);
 
 // free
 void	ft_free_arr(char **tokens);
+
+// redirections
+void	ft_redirect_input(char *str);
+
+// exec.c
+int		ft_deal_execs(char *prompt);
 
 #endif

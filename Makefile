@@ -4,7 +4,7 @@ SRC_PATH = ./src/
 OBJS_PATH = ./objs/
 
 SRC = $(SRC_PATH)main.c $(SRC_PATH)getenv.c $(SRC_PATH)utils.c $(SRC_PATH)split.c $(SRC_PATH)builtins.c \
-		$(SRC_PATH)free.c
+		$(SRC_PATH)free.c $(SRC_PATH)redirections.c $(SRC_PATH)exec.c
 
 OBJS = $(SRC:$(SRC_PATH)%.c=$(OBJS_PATH)%.o)
 

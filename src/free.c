@@ -10,3 +10,5 @@ void	ft_free_arr(char **tokens)
 		free(tokens[i]);
 	free(tokens);
 }
+
+// void	ft_free_env()

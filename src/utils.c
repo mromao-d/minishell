@@ -1,5 +1,6 @@
 #include "../includes/minishel.h"
 
+// compares 2 strings
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	while (*s1 && *s1 == *s2)
@@ -10,6 +11,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (*s1 - *s2);
 }
 
+// compares 2 strings until i
 int	ft_strncmp(const char *s1, const char *s2, size_t	i)
 {
 	size_t	j;
@@ -26,6 +28,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t	i)
 	return ((int)*s1 - (int)*s2);
 }
 
+// returns len of string
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
@@ -36,6 +39,7 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
+// returns a substring os string s
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	size_t	i;
@@ -60,6 +64,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (str);
 }
 
+// advances on the string till it finds char c.
+// returns the string from there onwards
 char	*ft_strchr(const char *s, int c)
 {
 	while (*s && *s != c)
@@ -69,6 +75,7 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
+// counts words on an array
 int	ft_count_words_arr(char **arr)
 {
 	int	i;
@@ -79,6 +86,7 @@ int	ft_count_words_arr(char **arr)
 	return (i);
 }
 
+// joins 2 strings
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		i;
@@ -104,6 +112,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (str);
 }
 
+// copies a string into another string
 char	*ft_strdup(const char *s)
 {
 	int		i;
@@ -120,4 +129,23 @@ char	*ft_strdup(const char *s)
 	}
 	str[i] = '\0';
 	return (str);
+}
+
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	while (dst[i] && i < size)
+		i++;
+	while (src[j] && (i + j + 1) < size)
+	{
+		dst[i + j] = src[j];
+		j++;
+	}
+	if (i < size)
+		dst[i + j] = '\0';
+	return (i + ft_strlen(src));
 }

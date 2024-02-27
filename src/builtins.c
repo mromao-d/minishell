@@ -34,6 +34,8 @@ int	ft_echo(char *prompt)
 	int		i;
 	int		wrds;
 
+	if (ft_validate_quotes(prompt) != 0)
+		return (-1);
 	tokens = ft_split(prompt, ' ');
 	wrds = ft_count_words_arr(tokens);
 	if (!(prompt[4] == ' ' || prompt[4] == 0))
@@ -115,5 +117,21 @@ int	ft_pwd(void)
 	}
 	printf("%s\n", pwd);
 	free(pwd);
+	return (0);
+}
+
+int	ft_env(char **envp)
+{
+	int		i;
+	char	**lines;
+
+	i = -1;
+	while (envp[++i])
+	{
+		lines = ft_split(envp[i], '=');
+		printf("%i %s = %s\n", i, lines[0], lines[1]);
+		ft_free_arr(lines);
+		lines = 0;
+	}
 	return (0);
 }

@@ -27,7 +27,7 @@ char	*ft_get_env(const char *env)
 	while (*env != ' ')
 		env++;
 	env++;
-	ft_print_splited(ft_save_args(env));
+	// ft_print_splited(ft_save_args(env));
 	if (!(ft_strcmp(env, "PATH") == 0 || ft_strcmp(env, "HOME") == 0 || ft_strcmp(env, "TERM") == 0 || ft_strcmp(env, "USER") == 0))	
 	{	
 		perror("No valid env\n");

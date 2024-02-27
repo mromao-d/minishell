@@ -62,14 +62,44 @@ void	ft_exit(void)
 	exit(0);
 }
 
+// validate if all quotes are closed (even numbers)
+// returns zero if yes
+int	ft_validate_quotes(char *arg)
+{
+	int	single_q;
+	int	double_q;
+	int	i;
 
-int main(void) 
+	single_q = 0;
+	double_q = 0;
+	i = -1;
+	while (arg[++i])
+	{
+		if (arg[i] == '\'')
+			single_q++;
+		if (arg[i] == '"')
+			double_q++;
+	}
+	if (single_q % 2 == 0 && double_q % 2 == 0)
+		return (0);
+	printf("unclosed quotes!\n");
+	return (1);
+}
+
+
+
+
+int main(int argc, char **argv, char **envp) 
 {
 	char	*prompt;
 
+	if (argc > 1)
+		return (0);
+	(void) argv;
     while (1)
 	{
 		prompt = readline("minishell$: ");
+		ft_get_env("PATH");
 		if (!prompt)
 		{
 			printf("\n");
@@ -78,6 +108,9 @@ int main(void)
 		if (ft_strcmp(prompt, "exit") == 0)
 			ft_exit();
 		ft_deal_built_ins(prompt);
+		ft_deal_execs(prompt);
+		if (ft_strcmp(prompt, "env") == 0)
+			ft_env(envp);
 		if (ft_strncmp(prompt, "./", 2) == 0)
 			ft_execv(prompt, NULL);
 		if (strcmp(prompt, "clear") == 0)
