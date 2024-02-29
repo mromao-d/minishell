@@ -26,8 +26,11 @@ int main(int argc, char **argv)
 {
 	char *a;
 	char *b;
+	char *args[] = {"/usr/local/bin/cat", NULL};
+	char *cpy;
 
 	a = malloc(sizeof(char) * 60);
+	cpy = malloc(sizeof(char) * 20);
 	strcpy(a, "asdsadM");
 	b = malloc(sizeof(char) * 7);
 	// a = "kjbsd";
@@ -42,7 +45,11 @@ int main(int argc, char **argv)
 	a[strlen(a)] = '/';
 	ft_strlcat(a, b, strlen(a) + strlen(b));
 	printf("ft_strlcat is: %s\n", a);
-	// printf("env is: %d\n", execv(getenv("PATH"), "cat", NULL));
+	// args = (char **) 
+	// execve("/usr/local/bin/cat", "Makefile", NULL);
+	// execve("/usr/bin/cat", args, NULL);
+	// execve("/usr/bin/cat", (char *[]){"/usr/bin/cat", "Makefile", NULL}, NULL);
+	printf("strcpy is: %s\n", strcpy(cpy, "asdasdasd"));
 	// a = strncpy(a, b, 2);
 	// printf("asfdasds\n");
 	return (0);

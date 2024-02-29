@@ -38,31 +38,15 @@ int	ft_echo(char *prompt)
 		return (-1);
 	tokens = ft_split(prompt, ' ');
 	wrds = ft_count_words_arr(tokens);
-	if (!(prompt[4] == ' ' || prompt[4] == 0))
-	{
-		printf("%s: command not found\n", tokens[0]);
-		ft_free_arr(tokens);
-		return (0);
-	}
-	if (ft_strcmp(prompt, "echo") == 0)
-		return(printf("\n"));
 	i = 0;
-	if (ft_strcmp(tokens[1], "-n") != 0)
-	{
-		while (tokens[++i] && (i + 1) < wrds)
-			printf("%s ", tokens[i]);
-		printf("%s", tokens[i]);
-		ft_free_arr(tokens);
-		return (printf("\n"));
-	}
-	else
+	if (ft_strcmp(tokens[1], "-n") == 0)
 	{
 		while (tokens[++i + 1] && (i + 2) < wrds)
 			printf("%s ", tokens[i + 1]);
 		printf("%s", tokens[i + 1]);
 		ft_free_arr(tokens);
-		return (0);
 	}
+	return (0);
 }
 
 // receives the path and relocates to that direction using chdir

@@ -86,9 +86,6 @@ int	ft_validate_quotes(char *arg)
 	return (1);
 }
 
-
-
-
 int main(int argc, char **argv, char **envp) 
 {
 	char	*prompt;

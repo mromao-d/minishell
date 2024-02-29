@@ -39,6 +39,9 @@ int		ft_count_words_arr(char **arr);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strdup(const char *s);
 size_t	ft_strlcat(char *dst, const char *src, size_t size);
+size_t	ft_strlcpy(char *dest, const char *src, size_t size);
+char	*ft_strcpy(char *dest, const char *src);
+void	ft_bzero(void *s, size_t n);
 
 // split
 char	**ft_split(char const *str, char c);
