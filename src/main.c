@@ -108,8 +108,8 @@ int main(int argc, char **argv, char **envp)
 		ft_deal_execs(prompt);
 		if (ft_strcmp(prompt, "env") == 0)
 			ft_env(envp);
-		if (ft_strncmp(prompt, "./", 2) == 0)
-			ft_execv(prompt, NULL);
+		// if (ft_strncmp(prompt, "./", 2) == 0)
+		// 	ft_execv(prompt, NULL);
 		if (strcmp(prompt, "clear") == 0)
 			printf("\033[2J\033[H");
 		add_history(prompt);

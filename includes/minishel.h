@@ -11,6 +11,8 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 
+# define CWD_SIZE 1024
+
 typedef struct s_shell {
 	char			*echos;
 	struct s_env	*env;
