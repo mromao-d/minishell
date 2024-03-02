@@ -9,14 +9,24 @@
 	// env with no options or arguments
 	// exit with no options
 
-void	ft_deal_built_ins(char *prompt)
+// exits programm
+void	ft_exit(void)
 {
-	if (ft_strcmp(prompt, "pwd") == 0)
-		ft_pwd();
-	if (ft_strncmp(prompt, "cd", 2) == 0)
-		ft_cd(prompt);
-	if (ft_strncmp(prompt, "echo", 4) == 0)
-		ft_echo(prompt);
+	exit(0);
+}
+
+void	ft_deal_built_ins(t_shell *shell)
+{
+	// if (ft_strcmp(shell->tokens[0], "pwd") == 0)
+	// 	ft_pwd();
+	if (ft_strncmp(shell->tokens[0], "cd", 2) == 0)
+		ft_cd(shell->tokens[0]);
+	if (ft_strncmp(shell->tokens[0], "echo", 4) == 0)
+		ft_echo(shell->promt);
+	if (ft_strcmp(shell->tokens[0], "exit") == 0)
+		ft_exit();
+	if (ft_strcmp(shell->tokens[0], "env") == 0)
+		ft_env(shell->envp);
 	return ;
 }
 

@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
@@ -55,16 +57,25 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 // 	return (0);
 // }
 
-int	main(void)
-{
-	printf("Here from test!\n");
-	return (0);
-}
-
 // int	main(void)
 // {
-// 	execve("/mnt/c/Users/42/minishell",
-//               (char *[]){"/mnt/c/Users/42/minishell", "/mnt/c/Users/42/minishell/test", NULL},
-//               NULL);
+// 	printf("Here from test!\n");
 // 	return (0);
 // }
+
+int	main(void)
+{
+	char *prompt;
+
+	while (1)
+	{
+		prompt = readline("test: ");
+		if (strcmp(prompt, "ls") == 0)
+		{
+			printf("Yes\n");
+			// execve("/usr/bin/cat", (char *[]){"/usr/bin/cat", "tes.txt", NULL}, NULL);
+			execve("/usr/bin/ls", (char *[]){"ls", NULL}, NULL);
+		}
+	}
+	return (0);
+}

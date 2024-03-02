@@ -9,34 +9,6 @@
 
 // add_history	-> add history --> need this to add history of what was prompted
 
-
-// execv executes the programe with the needed arguments
-// Need to fork the process-- otherwise it will end my process and close my prompt
-// 		The child process pid equals zero.
-// should return -1 (or zero ???)
-int	ft_execv(const char *path, char *const *argv)
-{
-	int	pid;
-	int	status;
-
-	pid = fork();
-	if (pid < 0)
-	{
-		perror("fork");
-		return (-1);
-	}
-	if (pid == 0)
-	{	
-		execv(path, argv);
-		perror("execv");
-		kill(getpid(), SIGKILL);
-	}
-	else
-		waitpid(pid, &status, 0);
-	return (-1);
-}
-
-
 void	ft_clean_args(char **kargs, int argc)
 {
 	int	i;
@@ -54,12 +26,6 @@ void	ft_clean(char *kargs)
 	if (kargs)
 		free(kargs);
 	return ;
-}
-
-// exits programm
-void	ft_exit(void)
-{
-	exit(0);
 }
 
 // validate if all quotes are closed (even numbers)
@@ -89,34 +55,29 @@ int	ft_validate_quotes(char *arg)
 int main(int argc, char **argv, char **envp) 
 {
 	char	*prompt;
+	t_shell	*shell;
 
 	if (argc > 1)
 		return (0);
 	(void) argv;
+	(void) envp;
     while (1)
 	{
 		prompt = readline("minishell$: ");
-		ft_get_env("PATH");
 		if (!prompt)
 		{
 			printf("\n");
 			break;
 		}
-		if (ft_strcmp(prompt, "exit") == 0)
-			ft_exit();
-		ft_deal_built_ins(prompt);
+		shell = ft_shell(prompt);
+		ft_deal_built_ins(shell);
 		ft_deal_execs(prompt);
-		if (ft_strcmp(prompt, "env") == 0)
-			ft_env(envp);
-		// if (ft_strncmp(prompt, "./", 2) == 0)
-		// 	ft_execv(prompt, NULL);
-		if (strcmp(prompt, "clear") == 0)
+		if (strcmp(shell->tokens[0], "clear") == 0)
 			printf("\033[2J\033[H");
 		add_history(prompt);
+		ft_free_shell(shell);
 		free((void *) prompt);
-		prompt = 0;
 	}
 	rl_clear_history();
-	// ft_clean(prompt);
 	return 0;
 }
