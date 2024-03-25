@@ -85,44 +85,29 @@ int	ft_deal_execs_aux(char **paths, char **tokens)
 		joined[ft_strlen(joined)] = '/';
 		ft_strlcat(joined, tokens[0], ft_strlen(joined) + ft_strlen(tokens[0]) + 1);
 		joined[ft_strlen(joined) + 1] = 0;
-		// if (access(joined, X_OK) == 0)
 		if (access(joined, X_OK) == 0 && ft_execve(joined, tokens, NULL) == 0)
-		{
-			// ft_execve(joined, tokens, NULL);
 			exit = 1;
-		}
 		free(joined);
 	}
-	if (exit != 1)
-		printf("Error | wrong cmd\n");
-	ft_free_arr(paths);
-	ft_free_arr(tokens);
+	// if (exit != 1)
+	// 	printf("Error | wrong cmd\n");
 	return (0);
 }
 
 //		/bin runs all executable files that are part of the core operating system.
 //		/usr/bin contains executable files that are not part of the core operating system.
-int	ft_deal_execs(char *prompt)
+int	ft_deal_execs(t_shell *shell)
 {
 	char	*env;
 	char	**paths;
-	char	**tokens;
 
+	env = 0;
+	paths = 0;
+	if (ft_has_redirections(shell))
+		return (0);
 	env = getenv("PATH");
 	paths = ft_split(env, ':');
-	tokens = ft_split(prompt, ' ');
-	if (ft_strncmp(tokens[0], "./", 2) == 0)
-		return (ft_run_program(tokens, paths));
-	if (ft_count_words_arr(tokens) == 0)
-	{
-		// execve("/usr/bin", (char *[]){"/usr/bin/ls", NULL}, NULL);
-		// if (access(tokens[0], X_OK) == 0 && ft_strncmp(tokens[0], "/usr", 4) == 0)
-		if (access(tokens[0], X_OK))
-			ft_execve(tokens[0], (char *[]){tokens[0], NULL}, NULL);
-	}
-	else
-		return(ft_deal_execs_aux(paths, tokens));
+	ft_deal_execs_aux(paths, shell->tokens);
 	ft_free_arr(paths);
-	ft_free_arr(tokens);
 	return (0);
 }
