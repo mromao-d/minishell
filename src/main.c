@@ -9,72 +9,15 @@
 
 // add_history	-> add history --> need this to add history of what was prompted
 
+// frees array
 void	ft_free_arr(char **arr)
 {
-	while (*arr) {
-		free(*arr);
-		arr++;
-	}
-	free(arr);
-}
-
-t_shell	*init_mini_shell(char **envp)
-{
-	t_shell	*minishell;
-
-	minishell = calloc(sizeof(t_shell), 1);
-	if (!minishell) {
-		perror("Malloc ing minishell");
-		exit (1);
-	}
-	minishell->path = calloc(sizeof(char), 1);
-	if (!minishell->path) {
-		perror ("minishell path calloc shit");
-		exit (2);
+	int	i;
 	
-	}
-	// minishell->envp = calloc(sizeof(char *), 1);
-	minishell->envp = ft_get_paths(envp);
-	return (minishell);
-}
-
-// stores each command in the t_cmds structure
-t_cmds	*ft_init_cmds(t_shell *minishell)
-{
-	t_cmds	*head;
-	t_cmds	*current;
-	t_cmds	*tmp;
-	char	**token;
-	int		i;
-
-	head = calloc(sizeof(t_cmds), 1);
-	if (!head) {
-		perror ("malloc cmd on ft_init_cmds");
-		exit (1);
-	}
-	i = 0;
-	token = ft_split(minishell->prompt, ' ');
-	head->token = token[0];
-	head->next_cmd = NULL;
-	current = head;
-	i = 0;
-	while (token[++i]) {
-		tmp = calloc(sizeof(t_cmds), 1);
-		if (!tmp) {
-			perror ("malloc tmp on ft_init_cmds");
-			exit (1);
-		}
-		// tmp->token = strdup(token[i]);
-		tmp->token = token[i];
-		tmp->next_cmd = NULL;
-		current->next_cmd = tmp;
-		current = tmp;
-	}
-	minishell->cmds = head;
-	// minishell->path = ft_get_builtin_name(minishell->envp, minishell->cmds->token);
-	minishell->path = ft_get_builtin_name(minishell);
-	// ft_free_arr(token);
-	return (head);
+	i = -1;
+	while (arr[++i])
+		free(arr[i]);
+	free(arr);
 }
 
 // frees t_cmds structure
@@ -93,201 +36,215 @@ void	ft_free_cmd(t_cmds **cmds)
 	return ;
 }
 
+// frees the environment structure
+void	ft_free_env(t_env *env)
+{
+	t_env	*head;
+	t_env	*next;
+
+	head = env;
+	next = head;
+	while (next) {
+		head = next;
+		next = next->next_node;
+		free(head->var_name);
+		// free(head->var_value);
+		free(head);
+	}
+}
+
+// prints array
 void	ft_print_arr(char **arr)
 {
-	while (*arr) {
-		printf("%s\n", *arr);
-		arr++;
+	char	**head;
+
+	head = arr;
+	while (*head) {
+		printf("%s\n\n", *head);
+		head++;
 	}
 	return ;
 }
 
-// returns all paths from the environment
-char	**ft_get_paths(char	**envp)
+// prints array
+void	ft_print_env(t_env *env)
 {
-	char	**paths;
+	t_env	*head;
 
-	while (*envp)
-	{
-		if (strncmp(*envp, "PATH", 4) == 0) {
-			paths = ft_split(*envp + 5, ':');
-			printf("%s\n", *envp);
-			break;
-		}
-		envp++;
-	}
-	// ft_print_arr(paths);
-	return (paths);
-}
-
-// returns the executable name, if it has accesses.
-// access returns zero if all is ok
-// char	*ft_get_builtin_name(char **paths, char *cmd)
-char	*ft_get_builtin_name(t_shell *shell)
-{
-	char	*s_path;
-	char	*temp;
-	char	**env;
-	t_cmds	*head;
-	// char	**fst_cmd;
-
-	// fst_cmd = ft_split(cmd, ' ');
-	head = shell->cmds;
+	head = env;
 	while (head) {
-		env = shell->envp;
-		while (*env) {
-			s_path = strdup(*env);
-			temp = s_path;
-			// s_path = ft_strjoin(s_path, fst_cmd[0]);
-			s_path = ft_strjoin(s_path, "/");
-			s_path = ft_strjoin(s_path, head->token);
-			// printf("s_path is %s\n", s_path);
-			if (!access(s_path, F_OK | R_OK)) {
-				free(temp);
-				// ft_free_arr(fst_cmd);
-				return (s_path);
-			}
-			free(s_path);
-			free(temp);
-			env++;
-		}
-		// if (head->next_cmd->token != NULL)
-		head = head->next_cmd;
-		printf("\n\ntoken is %s\n\n", head->token);
+		printf("%s\n\n", head->var_name);
+		head=head->next_node;
 	}
-	// ft_print_arr(fst_cmd);
-	// ft_free_arr(fst_cmd);
-	// printf("command not found!\n");
-	return NULL;
+	return ;
 }
+
+// prints cmds
+void	ft_print_cmds(t_cmds *cmds)
+{
+	t_cmds	*head;
+
+	head = cmds;
+	while (head) {
+		printf("%s\n\n", head->token);
+		head=head->next_cmd;
+	}
+	return ;
+}
+
+// counts the elements on an array
+int	ft_count_arr(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (*arr) {
+		i++;
+		arr++;
+	}
+	return (i);
+}
+
+// converts each list of commands into a array
 
 // saves the fd of all commands
 void	ft_save_fd(t_shell *minishell)
 {
 	minishell->fd_in = dup(STDIN_FILENO);
 	minishell->fd_out = dup(STDOUT_FILENO);
-	// minishell->fd_err = dup(STDERR_FILENO);
 	return ;
 }
 
-// executes the programme
-int	ft_execve(t_shell *shell)
+t_shell	*ft_init_shell(char **envp)
 {
-	int	fd[2];
-	int	pid;
-	int	status;
+	t_shell	*shell;
 
-	if (pipe(fd) < 0) {
-		perror ("pipe error on ft_execve\n");
+	shell = calloc(sizeof(t_shell), 1);
+	if (!shell) {
+		perror ("init shell error!\n");
 		exit (1);
 	}
-	pid = fork();
-	if (pid < 0) {
-		perror ("fork error on ft_execve\n");
-		exit (2);
-	}
-	if (pid == 0) {
-        close(shell->fd_out);
-        close(shell->fd_in);
-        dup2(fd[0], shell->fd_in);
-        dup2(fd[1], shell->fd_out);
-        close(fd[0]);
-        close(fd[1]);
-		execve(shell->path, shell->tokens, NULL);
-	}
-	else {
-        close(shell->fd_out);
-        close(shell->fd_in);
-        close(fd[0]);
-        close(fd[1]);
-		waitpid(pid, &status, 0);
-	}
-	return (fd[0]);
+	shell->env = ft_init_env(envp);
+	// ft_save_fd(shell);
+	return (shell);
 }
 
-// // validates if has redirections
-void	ft_has_redirections(t_shell *shell)
+// saves the env variables
+t_env	*ft_init_env(char **envp)
 {
-	int	fd[2];
-	int	pid;
-	int	status;
+	t_env	*env;
+	t_env	*current;
+	t_env	*next;
+	int		i;
+
+	env = calloc(sizeof(t_env), 1);
+	if (!env) {
+		perror ("env creation\n");
+		exit (1);
+	}
+	i = 0;
+	env->var_name = ft_inv_strchr(*envp, '=');
+	env->var_value = strchr(*envp, '=');
+	env->next_node = NULL;
+	env->order = i;
+	current = env;
+	while (*envp && ++i) {
+		next = calloc(sizeof(t_env), 1);
+		next->order = i;
+		next->var_name = ft_inv_strchr(*envp, '=');
+		next->var_value = strchr(*envp, '=');
+		next->next_node = NULL;
+		current->next_node = next;
+		current = current->next_node;
+		envp++;
+	}
+	return (env);
+}
+
+void	ft_init_cmds(t_shell *shell)
+{
 	t_cmds	*head;
+	t_cmds	*current;
+	t_cmds	*next;
+	char	**splited;
+	int		i;
 
-	head = shell->cmds;
-	head = head->next_cmd;
-	int	fdd = open(shell->cmds->next_cmd->token, O_RDONLY);
-	// int	fdd = open("infile" , O_RDONLY);
-	if (fdd < 0) {
-		perror ("fd opening error");
-		exit (1);
+	splited = ft_split(shell->prompt, ' ');
+	head = calloc(sizeof(t_cmds), 1);
+	if (!head) {
+		perror ("calloc cmds in ft_init_cmds");
+		exit (3);
 	}
-	if (strcmp(shell->cmds->token, "<") != 0)
-		return ;
-	if (pipe(fd) < 0) {
-		perror ("pipe error on has_redirections\n");
-		exit (2);
+	i = 0;
+	shell->cmds = head;
+	shell->cmds->token = strdup(splited[i]);
+	shell->cmds->next_cmd = NULL;
+	current = shell->cmds;
+	while (splited[++i]) {
+		next = calloc(sizeof(t_cmds), 1);
+		if (!next) {
+			perror ("calloc next in ft_init_cmds");
+			exit (3);
+		}
+		next->token = strdup(splited[i]);
+		next->next_cmd = NULL;
+		current->next_cmd = next;
+		current = current->next_cmd;
 	}
-	pid = fork();
-	if (pid == 0) {
-		// dup2(shell->fd_in, fdd);
-		dup2(fdd, STDIN_FILENO);
-		dup2(fd[1], shell->fd_out);
-		close(fdd);
-		close(fd[0]);
-		close(fd[1]);
-		execve(shell->path, (char *[]){shell->path, NULL}, NULL);
-	}
-	else {
-		close(fd[0]);
-		close(fd[1]);
-		close(fdd);
-		waitpid(pid, &status, 0);
-	}
-}
-
-// executes commands
-void	ft_exec_cmd(t_shell *shell)
-{
-	ft_save_fd(shell);
-	// if (shell->path != NULL && (strcmp(shell->cmds->token, "<") != 0))
-	// 	ft_execve(shell);
-	ft_has_redirections(shell);
+	ft_free_arr(splited);
 	return ;
 }
 
-int main(int argc, char **argv, char **envp) 
+// prints current directory
+void	ft_print_cd()
 {
-	t_shell	*mini_shell;
+	char	cwd[1024];
 
-	if (argc > 1)
-		return (0);
-	(void) argv;
+	getcwd(cwd, sizeof(cwd));
+	printf("%s\n", cwd);
+	return ;
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_shell	*shell;
+	// t_cmds	*head;
+
 	(void) argc;
-	(void) envp;
-	mini_shell = init_mini_shell(envp);
-	while (1)
-	{
-		mini_shell->prompt = readline("minishell$: ");
-		if (!mini_shell->prompt)
-		{
-			perror("prompt error");
-			return (1);
-		}
-		mini_shell->tokens = ft_split(mini_shell->prompt, ' ');
-		mini_shell->cmds = ft_init_cmds(mini_shell);
-		add_history(mini_shell->prompt);
-		ft_exec_cmd(mini_shell);
-		ft_free_cmd(&mini_shell->cmds);
-		// ft_free_arr(mini_shell->tokens);
-		free(mini_shell->prompt);
+	(void) argv;
+	shell = ft_init_shell(envp);
+	while (1) {
+		shell->prompt = readline("minishel$ ");
+		ft_save_fd(shell);
+		add_history(shell->prompt);
+		ft_init_cmds(shell);
+		// ft_print_cmds(shell->cmds);
+		// head = shell->cmds;
+		// while (shell->cmds) {
+		// 	// ft_execve(shell, head->token);
+		// 	ft_execve_(shell);
+		// 	shell->cmds = shell->cmds->next_cmd;
+		// 	// head = shell->cmds;
+		// }
+		// head = shell->cmds;
+		// ft_simple_redirect(shell);
+		// ft_simple_redirect_new(shell);
+		ft_find_path(shell);
+		ft_execve_(shell);
+		free(shell->prompt);
+		// printf("path is: %s\n", shell->path);
+		// dup2(shell->fd_in, STDIN_FILENO);
+		// dup2(shell->fd_out, STDOUT_FILENO);
+		// close(shell->fd_in);
+		// close(shell->fd_out);
+		// if (shell->path && shell->path != NULL)
+		// 	free(shell->path);
+		ft_free_cmd(&shell->cmds);
 	}
-	ft_free_arr(mini_shell->envp);
-	free(mini_shell);
-	// ft_free_arr(paths);
+	ft_free_env(shell->env);
+	free(shell);
 	return (0);
 }
-
-
 
 
 

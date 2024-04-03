@@ -1,5 +1,30 @@
 #include "../includes/minishel.h"
 
+// returns the string before finding c (or all string)
+char	*ft_inv_strchr(const char *s, int c)
+{
+	char	*out;
+	size_t	i;
+
+	i = 0;
+	while (s[i] != c && s[i])
+		i++;
+	if ( i == strlen(s))
+		return (NULL);
+	out = calloc(sizeof(char), (i + 1));
+	if (!out) {
+		perror ("malloc error on ft_inv_strchr\n");
+		exit (0);
+	}
+	i = 0;
+	while (s[i] != c) {
+		out[i] = s[i];
+		i++;
+	} 
+	out[i] = '\0';
+	return (out);
+}
+
 // compares 2 strings
 int	ft_strcmp(const char *s1, const char *s2)
 {

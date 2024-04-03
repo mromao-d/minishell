@@ -7,10 +7,10 @@ t_shell	*ft_shell(char *prompt)
 	shell = calloc(sizeof(t_shell), 1);
 	if (!shell)
 		perror("Error calloc ing shell on ft_shell\n");
-	shell->promt = strdup(prompt);
+	shell->prompt = strdup(prompt);
 	shell->tokens = ft_split(prompt, ' ');
-	shell->s_quotes = 0;
-	shell->d_quotes = 0;
+	// shell->s_quotes = 0;
+	// shell->d_quotes = 0;
 	// shell->in = dup(STDIN_FILENO);
 	// shell->out = dup(STDOUT_FILENO);
 	// shell->err = dup(STDERR_FILENO);
@@ -42,7 +42,7 @@ void	ft_free_shell(t_shell *shell)
 		str++;
 	}
 	free(shell->tokens);
-	free(shell->promt);
+	free(shell->prompt);
 	free(shell);
 	// return (0);
 	return ;

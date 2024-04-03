@@ -6,12 +6,12 @@ OBJS_PATH = ./objs/
 # SRC = $(SRC_PATH)main.c $(SRC_PATH)getenv.c $(SRC_PATH)utils.c $(SRC_PATH)lib.c $(SRC_PATH)split.c $(SRC_PATH)builtins.c \
 # 		$(SRC_PATH)free.c $(SRC_PATH)redirections.c $(SRC_PATH)exec.c
 
-SRC = $(SRC_PATH)main.c $(SRC_PATH)split.c $(SRC_PATH)utils.c $(SRC_PATH)lib.c
+SRC = $(SRC_PATH)main.c $(SRC_PATH)split.c $(SRC_PATH)utils.c $(SRC_PATH)lib.c $(SRC_PATH)built_ins.c
 
 OBJS = $(SRC:$(SRC_PATH)%.c=$(OBJS_PATH)%.o)
 
 # CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -lbsd -g
 
 CC = cc
 

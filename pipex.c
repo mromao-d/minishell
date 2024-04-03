@@ -325,6 +325,9 @@ int	main(int argc, char **argv, char **envp)
 		paths = ft_get_paths(envp);
 		ft_exec_child(argv, fd, paths, argc);
 	}
-	ft_free_arr (paths);
+	else
+		printf("wrong number of args\n");
+	if (argc > 4)
+		ft_free_arr (paths);
 	return (0);
 }
